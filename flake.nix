@@ -1,5 +1,5 @@
 {
-  description = "NixOS hardware support for MediaTek MT7927 / MT6639 (Filogic 380) WiFi 7 and Bluetooth";
+  description = "NixOS hardware support for MediaTek MT7927 / MT6639 (Filogic 380) WiFi 7 and Bluetooth. Edited to work on BoneWalk3r's system.";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -11,19 +11,15 @@
     };
   };
 
-  outputs =
-    {
-      self,
-      nixpkgs,
-      mediatek-mt7927-dkms,
-    }:
+  outputs = { self, nixpkgs, mediatek-mt7927-dkms }:
+
     let
-      system = "x86_64-linux";
-      pkgs = nixpkgs.legacyPackages.${system};
+      pkgs = nixpkgs.legacyPackages.x86_64-linux;
       repoSrc = mediatek-mt7927-dkms;
 
-      # 1. Load automated version/hash data from the JSON bridge
+      # Check if we have saved versions. If not, fall-back to the hardcoded version.
       versions =
+
         if builtins.pathExists ./versions.json then
           builtins.fromJSON (builtins.readFile ./versions.json)
         else
@@ -67,12 +63,13 @@
       };
 
       # Generator function for kernel-version-specific packages
-      mkMt7927 =
-        kernel:
+      mkMt7927 = kernel:
+
         let
           isClang = kernel.stdenv.cc.isClang or false;
           kernelBuild = "${kernel.dev}/lib/modules/${kernel.modDirVersion}/build";
           makeFlags = if isClang then "LLVM=1 CC=clang" else "";
+
         in
         rec {
           firmware = kernel.stdenv.mkDerivation {
@@ -107,14 +104,19 @@
 
           wifi = kernel.stdenv.mkDerivation {
             pname = "mediatek-mt7927-wifi";
+
             version = "2.1";
+
             src = "${linuxDrivers}/drivers/net/wireless/mediatek/mt76";
+
             nativeBuildInputs = kernel.moduleBuildDependencies ++ [
               pkgs.python3
               pkgs.perl
               pkgs.kmod
             ];
+
             patches = wifiPatches;
+
             postPatch = ''
               # Install upstream Kbuild files
               cp ${repoSrc}/mt76.Kbuild Kbuild
@@ -125,11 +127,13 @@
               cp ${repoSrc}/compat-airoha-offload.h \
                 compat/include/linux/soc/airoha/airoha_offload.h
             '';
+
             buildPhase = ''
               runHook preBuild
               make -C ${kernelBuild} M=$(pwd) ${makeFlags} modules
               runHook postBuild
             '';
+
             installPhase = ''
               runHook preInstall
               modDir="$out/lib/modules/${kernel.modDirVersion}/extra/mt76"
@@ -139,20 +143,31 @@
               install -m644 mt7925/*.ko "$modDir/mt7925/"
               runHook postInstall
             '';
+
+            postInstall = ''
+              depmod -b $out ${kernel.modDirVersion}
+            '';
           };
+
 
           bluetooth = kernel.stdenv.mkDerivation {
             pname = "mediatek-mt7927-bluetooth";
+
             version = "2.1";
+
             src = "${linuxDrivers}/drivers/bluetooth";
+
             nativeBuildInputs = kernel.moduleBuildDependencies ++ [ pkgs.kmod ];
+
             patches = btPatches;
+
             buildPhase = ''
               runHook preBuild
               echo "obj-m += btusb.o btmtk.o" > Makefile
               make -C ${kernelBuild} M=$(pwd) ${makeFlags} modules
               runHook postBuild
             '';
+
             installPhase = ''
               runHook preInstall
               modDir="$out/lib/modules/${kernel.modDirVersion}/extra/bluetooth"
@@ -160,13 +175,15 @@
               install -m644 btusb.ko btmtk.ko "$modDir/"
               runHook postInstall
             '';
+
           };
         };
 
       defaultModules = mkMt7927 pkgs.linux;
+
     in
     {
-      packages.${system} = {
+      packages.x86_64-linux = {
         firmware = defaultModules.firmware;
         wifi = defaultModules.wifi;
         bluetooth = defaultModules.bluetooth;
@@ -174,13 +191,7 @@
         repo-src = repoSrc;
       };
 
-      nixosModules.default =
-        {
-          config,
-          pkgs,
-          lib,
-          ...
-        }:
+      nixosModules.default = { config, pkgs, lib, ... }:
         let
           cfg = config.hardware.mediatek-mt7927;
           builtModules = mkMt7927 config.boot.kernelPackages.kernel;
