@@ -162,11 +162,11 @@
             installPhase = ''
               runHook preInstall
 
-              mkdir -p "$out/lib/modules/${kernel.modDirVersion}/extra/mt76"
-              make -C ${kernelBuild} M=$(pwd) \
-                  INSTALL_MOD_PATH=$out \
-                  INSTALL_MOD_DIR=extra/mt76 \
-                  modules_install
+              modDir="$out/lib/modules/${kernel.modDirVersion}/extra/mt76"
+              install -dm755 "$modDir/mt7921" "$modDir/mt7925"
+              install -m644 mt76.ko mt76-connac-lib.ko mt792x-lib.ko "$modDir/"
+              install -m644 mt7921/*.ko "$modDir/mt7921/"
+              install -m644 mt7925/*.ko "$modDir/mt7925/"
 
               runHook postInstall
             '';
@@ -199,11 +199,9 @@
             installPhase = ''
               runHook preInstall
 
-              mkdir -p "$out/lib/modules/${kernel.modDirVersion}/extra/bluetooth"
-              make -C ${kernelBuild} M=$(pwd) \
-                INSTALL_MOD_PATH=$out \
-                INSTALL_MOD_DIR=extra/bluetooth \
-                modules_install
+              modDir="$out/lib/modules/${kernel.modDirVersion}/extra/bluetooth"
+              install -dm755 "$modDir"
+              install -m644 btusb.ko btmtk.ko "$modDir/"
 
               runHook postInstall
             '';
