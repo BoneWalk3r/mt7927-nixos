@@ -107,7 +107,8 @@
 
             version = "2.1";
 
-            src = "${kernel.src}/drivers/net/wireless/mediatek/mt76";
+            # kernel.src is compressed, so this workaround is needed.
+            src = kernel.src; sourceRoot = "source/drivers/net/wireless/mediatek/mt76";
 
             nativeBuildInputs = kernel.moduleBuildDependencies ++ [
               pkgs.python3
@@ -152,7 +153,7 @@
 
             version = "2.1";
 
-            src = "${kernel.src}/drivers/bluetooth";
+            src = kernel.src; sourceRoot = "source/drivers/bluetooth";
 
             nativeBuildInputs = kernel.moduleBuildDependencies ++ [ pkgs.kmod ];
 
