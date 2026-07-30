@@ -65,7 +65,7 @@
         in
           map (n: "${repoSrc}/${n}")
             (builtins.filter (n: !(builtins.elem n upstreamed))
-              (versions.wifiPatches or []));
+              (versions.btPatches or []));
 
 
       # 4. Fetch kernel source
