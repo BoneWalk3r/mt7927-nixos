@@ -117,6 +117,8 @@
 
             patches = wifiPatches;
 
+            prePatch = "cd drivers/net/wireless/mediatek/mt76";
+
             postPatch = ''
               # Install upstream Kbuild files
               cp ${repoSrc}/mt76.Kbuild Kbuild
@@ -130,7 +132,7 @@
 
             buildPhase = ''
               runHook preBuild
-              cd drivers/net/wireless/mediatek/mt76
+
               make -C ${kernelBuild} M=$(pwd) ${makeFlags} modules
               runHook postBuild
             '';
@@ -159,9 +161,11 @@
 
             patches = btPatches;
 
+            prePatch = "cd drivers/bluetooth";
+
             buildPhase = ''
               runHook preBuild
-              cd drivers/bluetooth
+
               echo "obj-m += btusb.o btmtk.o" > Makefile
               make -C ${kernelBuild} M=$(pwd) ${makeFlags} modules
               runHook postBuild
