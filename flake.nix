@@ -50,10 +50,10 @@
       btPatches = map (n: "${repoSrc}/${n}") (versions.btPatches or [ ]);
 
       # 4. Fetch kernel source
-      linuxDrivers = pkgs.fetchzip {
-        url = "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/snapshot/linux-${versions.mt76KVer}.tar.gz";
-        hash = versions.mt76Hash;
-      };
+      #linuxDrivers = pkgs.fetchzip {
+        #url = "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/snapshot/linux-${versions.mt76KVer}.tar.gz";
+        #hash = versions.mt76Hash;
+      #};
 
       # 5. Firmware source from ASUS
       asusZip = pkgs.fetchurl {
@@ -107,7 +107,7 @@
 
             version = "2.1";
 
-            src = "${linuxDrivers}/drivers/net/wireless/mediatek/mt76";
+            src = "${kernel.src}/drivers/net/wireless/mediatek/mt76";
 
             nativeBuildInputs = kernel.moduleBuildDependencies ++ [
               pkgs.python3
@@ -144,9 +144,6 @@
               runHook postInstall
             '';
 
-            postInstall = ''
-              depmod -b $out ${kernel.modDirVersion}
-            '';
           };
 
 
@@ -155,7 +152,7 @@
 
             version = "2.1";
 
-            src = "${linuxDrivers}/drivers/bluetooth";
+            src = "${kernel.src}/drivers/bluetooth";
 
             nativeBuildInputs = kernel.moduleBuildDependencies ++ [ pkgs.kmod ];
 
@@ -216,8 +213,8 @@
           config = lib.mkIf cfg.enable {
             hardware.firmware = [ builtModules.firmware ];
             boot.extraModulePackages =
-              lib.optional cfg.enableWifi builtModules.wifi
-              ++ lib.optional cfg.enableBluetooth builtModules.bluetooth;
+              lib.optional cfg.enableWifi (lib.hiPrio builtModules.wifi)
+              ++ lib.optional cfg.enableBluetooth (lib.hiPrio builtModules.bluetooth);
 
             boot.kernelModules =
               lib.optionals cfg.enableWifi [
