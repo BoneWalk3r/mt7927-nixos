@@ -45,26 +45,27 @@
 
       # 3. Patch lists
       # These need to be maintained.
-      # As patches are integrated into the main kernel, you'll need to
+      # As patches are integrated into the main kernel/upstream, you'll need to
       # disable their application by naming them here.
-      wifiPatches = let upstreamed = [
+      wifiPatches = let blacklist = [
             "mt7927-wifi-02-fix-stale-pointer-comparisons-in-changev.patch"
+            "mt7927-wifi-23-keep-tx-ba-state-in-the-primary-wcid.patch"
             # add others as discovered
           ];
 
         in
           map (n: "${repoSrc}/${n}")
-            (builtins.filter (n: !(builtins.elem n upstreamed))
+            (builtins.filter (n: !(builtins.elem n blacklist))
               (versions.wifiPatches or []));
 
 
-      btPatches = let upstreamed = [
+      btPatches = let blacklist = [
             # add others as discovered
           ];
 
         in
           map (n: "${repoSrc}/${n}")
-            (builtins.filter (n: !(builtins.elem n upstreamed))
+            (builtins.filter (n: !(builtins.elem n blacklist))
               (versions.btPatches or []));
 
 
