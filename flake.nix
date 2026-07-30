@@ -107,8 +107,7 @@
 
             version = "2.1";
 
-            # kernel.src is compressed, so this workaround is needed.
-            src = kernel.src; sourceRoot = "source/drivers/net/wireless/mediatek/mt76";
+            src = kernel.src;
 
             nativeBuildInputs = kernel.moduleBuildDependencies ++ [
               pkgs.python3
@@ -131,6 +130,7 @@
 
             buildPhase = ''
               runHook preBuild
+              cd drivers/net/wireless/mediatek/mt76
               make -C ${kernelBuild} M=$(pwd) ${makeFlags} modules
               runHook postBuild
             '';
@@ -153,7 +153,7 @@
 
             version = "2.1";
 
-            src = kernel.src; sourceRoot = "source/drivers/bluetooth";
+            src = kernel.src;
 
             nativeBuildInputs = kernel.moduleBuildDependencies ++ [ pkgs.kmod ];
 
@@ -161,6 +161,7 @@
 
             buildPhase = ''
               runHook preBuild
+              cd drivers/bluetooth
               echo "obj-m += btusb.o btmtk.o" > Makefile
               make -C ${kernelBuild} M=$(pwd) ${makeFlags} modules
               runHook postBuild
