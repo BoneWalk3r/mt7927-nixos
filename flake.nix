@@ -155,16 +155,21 @@
               runHook preBuild
 
               make -C ${kernelBuild} M=$(pwd) ${makeFlags} modules
+
               runHook postBuild
             '';
 
             installPhase = ''
               runHook preInstall
-              modDir="$out/lib/modules/${kernel.modDirVersion}/extra/mt76"
-              install -dm755 "$modDir/mt7921" "$modDir/mt7925"
-              install -m644 mt76.ko mt76-connac-lib.ko mt792x-lib.ko "$modDir/"
-              install -m644 mt7921/*.ko "$modDir/mt7921/"
-              install -m644 mt7925/*.ko "$modDir/mt7925/"
+
+              mkdir -p "$out/lib/modules/${kernel.modDirVersion}/extra/mt76"
+              make -C ${kernelBuild} M=$(pwd) \
+                  INSTALL_MOD_PATH=$out \
+                  INSTALL_MOD_DIR=extra/mt76 \
+                  modules_install
+
+              depmod -b "$out" ${kernel.modDirVersion}
+
               runHook postInstall
             '';
 
@@ -189,14 +194,21 @@
 
               echo "obj-m += btusb.o btmtk.o" > Makefile
               make -C ${kernelBuild} M=$(pwd) ${makeFlags} modules
+
               runHook postBuild
             '';
 
             installPhase = ''
               runHook preInstall
-              modDir="$out/lib/modules/${kernel.modDirVersion}/extra/bluetooth"
-              install -dm755 "$modDir"
-              install -m644 btusb.ko btmtk.ko "$modDir/"
+
+              mkdir -p "$out/lib/modules/${kernel.modDirVersion}/extra/bluetooth"
+              make -C ${kernelBuild} M=$(pwd) \
+                INSTALL_MOD_PATH=$out \
+                INSTALL_MOD_DIR=extra/bluetooth \
+                modules_install
+
+              depmod -b "$out" ${kernel.modDirVersion}
+
               runHook postInstall
             '';
 
@@ -240,9 +252,7 @@
           config = lib.mkIf cfg.enable {
             hardware.firmware = [ builtModules.firmware ];
             boot.extraModulePackages =
-              lib.optional cfg.enableWifi (lib.hiPrio builtModules.wifi)
-              ++ lib.optional cfg.enableBluetooth (lib.hiPrio builtModules.bluetooth);
-
+              lib.optional cfg.enableWifi (lib.hiPrio builtModules.wifi) ++ lib.optional cfg.enableBluetooth (lib.hiPrio builtModules.bluetooth);
             boot.kernelModules =
               lib.optionals cfg.enableWifi [
                 "mt7925e"
