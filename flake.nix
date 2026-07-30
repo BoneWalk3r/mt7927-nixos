@@ -43,11 +43,30 @@
         in
         if m != null then builtins.head m else "b377fffa28208bb1671a0eb219c84c62fba4cd6f92161b74e4b0909476307cc8";
 
-      # 3. Patch lists — read from versions.json, populated by the
-      #    auto-update workflow which resolves them from the upstream
-      #    Makefile's glob patterns in the correct application order.
-      wifiPatches = map (n: "${repoSrc}/${n}") (versions.wifiPatches or [ ]);
-      btPatches = map (n: "${repoSrc}/${n}") (versions.btPatches or [ ]);
+      # 3. Patch lists
+      # These need to be maintained.
+      # As patches are integrated into the main kernel, you'll need to
+      # disable their application by naming them here.
+      wifiPatches = let upstreamed = [
+            "mt7927-wifi-02-fix-stale-pointer-comparisons-in-changev.patch"
+            # add others as discovered
+          ];
+
+        in
+          map (n: "${repoSrc}/${n}")
+            (builtins.filter (n: !(builtins.elem n upstreamed))
+              (versions.wifiPatches or []));
+
+
+      btPatches = let upstreamed = [
+            # add others as discovered
+          ];
+
+        in
+          map (n: "${repoSrc}/${n}")
+            (builtins.filter (n: !(builtins.elem n upstreamed))
+              (versions.wifiPatches or []));
+
 
       # 4. Fetch kernel source
       #linuxDrivers = pkgs.fetchzip {
