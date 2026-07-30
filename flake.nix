@@ -168,8 +168,6 @@
                   INSTALL_MOD_DIR=extra/mt76 \
                   modules_install
 
-              depmod -b "$out" ${kernel.modDirVersion}
-
               runHook postInstall
             '';
 
@@ -206,8 +204,6 @@
                 INSTALL_MOD_PATH=$out \
                 INSTALL_MOD_DIR=extra/bluetooth \
                 modules_install
-
-              depmod -b "$out" ${kernel.modDirVersion}
 
               runHook postInstall
             '';
