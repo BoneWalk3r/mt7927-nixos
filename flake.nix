@@ -226,6 +226,16 @@
           myKernelPackages =
             pkgs.linuxPackagesFor (
               pkgs.linuxPackages_latest.kernel.override {
+                  extraConfig = ''
+                    # External MT7927 mt76 stack
+                    CONFIG_MT76=n
+                    CONFIG_MT76_CONNAC_LIB=n
+                    CONFIG_MT792X_LIB=n
+                    CONFIG_MT7925_COMMON=n
+                    CONFIG_MT7921E=n
+                    CONFIG_MT7925E=n
+                  '';
+                  /*
                 structuredExtraConfig = with pkgs.lib.kernel; {
                   MT76_CORE = lib.mkForce no;
                   MT76_CONNAC_LIB = lib.mkForce no;
@@ -240,7 +250,7 @@
                   #BT_HCIBTUSB_MTK = lib.mkForce no;
                   #BT_HCIBTUSB = lib.mkForce no;
                   #BT_MTK = lib.mkForce no;
-                };
+                };*/
               }
             );
 
