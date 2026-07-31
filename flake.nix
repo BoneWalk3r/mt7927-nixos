@@ -223,18 +223,33 @@
         let
           cfg = config.hardware.mediatek-mt7927;
 
-          myKernelPackages =
-            pkgs.linuxPackagesFor (
+          myKernel =
+            pkgs.linuxPackages_latest.kernel.overrideAttrs (old: {
+              postPatch = (old.postPatch or "") + ''
+                echo "Removing in-tree MediaTek mt76 driver"
+
+                substituteInPlace drivers/net/wireless/mediatek/Makefile \
+                  --replace-fail "obj-\$(CONFIG_MT76)" "" || true
+
+                substituteInPlace drivers/net/wireless/mediatek/Kconfig \
+                  --replace-fail "source \"drivers/net/wireless/mediatek/mt76/Kconfig\"" "" || true
+
+                rm -rf drivers/net/wireless/mediatek/mt76
+              '';
+            });
+
+          myKernelPackages = pkgs.linuxPackagesFor myKernel;
+            /*pkgs.linuxPackagesFor (
               pkgs.linuxPackages_latest.kernel.override {
                 structuredExtraConfig = with pkgs.lib.kernel; {
                   # Kill all the dependancies, or else Kmod loads in-tree drivers and breaks everything.
                   # mt76 base/shared
-                  MT76_CORE = lib.mkForce no;
-                  MT76_CONNAC_LIB = lib.mkForce no;
+                  #MT76_CORE = lib.mkForce no;
+                  #MT76_CONNAC_LIB = lib.mkForce no;
 
                   # mt792x shared
-                  MT792X_LIB = lib.mkForce no;
-                  MT7925_COMMON = lib.mkForce no;
+                  #MT792X_LIB = lib.mkForce no;
+                  #MT7925_COMMON = lib.mkForce no;
 
                   # PCI/USB/SDIO MT792 drivers
                   MT7921E = lib.mkForce no;
@@ -245,15 +260,15 @@
                   MT7925U = lib.mkForce no;
 
                   # other connac users
-                  MT7915E = lib.mkForce no;
-                  MT7996E = lib.mkForce no;
+                  #MT7915E = lib.mkForce no;
+                  #MT7996E = lib.mkForce no;
 
                   #BT_HCIBTUSB_MTK = lib.mkForce no;
                   #BT_HCIBTUSB = lib.mkForce no;
                   #BT_MTK = lib.mkForce no;
                 };
               }
-            );
+            );*/
 
           builtModules = mkMt7927 myKernelPackages.kernel;
 
@@ -289,10 +304,6 @@
 
             boot.kernelModules =
               lib.optionals cfg.enableWifi [
-                "mt76"
-                "mt76-connac-lib"
-                "mt792x-lib"
-                "mt7925-common"
                 "mt7925e"
               ]
               ++ lib.optionals cfg.enableBluetooth [
