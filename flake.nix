@@ -224,7 +224,32 @@
       nixosModules.default = { config, pkgs, lib, ... }:
         let
           cfg = config.hardware.mediatek-mt7927;
-          builtModules = mkMt7927 config.boot.kernelPackages.kernel;
+
+          myKernelPackages =
+            config.boot.kernelPackages.overrideScope (
+              self: super: {
+                kernel = super.kernel.override {
+                  structuredExtraConfig = with pkgs.lib.kernel; {
+                    MT76_CORE = no;
+                    MT76_CONNAC_LIB = no;
+                    MT792x_LIB = no;
+
+                    MT7921_COMMON = no;
+                    MT7921E = no;
+
+                    MT7925_COMMON = no;
+                    MT7925E = no;
+
+                    BT_HCIBTUSB_MTK = no;
+                    BT_HCIBTUSB = no;
+                    BT_MTK = no;
+                  };
+                };
+              }
+            );
+
+          builtModules = mkMt7927 myKernelPackages.kernel;
+
         in
         {
           options.hardware.mediatek-mt7927 = {
@@ -245,16 +270,24 @@
 
           config = lib.mkIf cfg.enable {
             hardware.firmware = [ builtModules.firmware ];
+            boot.kernelPackages = myKernelPackages;
+
             boot.extraModulePackages =
-              lib.optional cfg.enableWifi (lib.hiPrio builtModules.wifi) ++ lib.optional cfg.enableBluetooth (lib.hiPrio builtModules.bluetooth);
+              lib.optionals cfg.enableWifi [
+                builtModules.wifi
+              ]
+              ++ lib.optionals cfg.enableBluetooth [
+                builtModules.bluetooth
+              ];
+
             boot.kernelModules =
               lib.optionals cfg.enableWifi [
                 "mt7925e"
                 "mt7921e"
               ]
               ++ lib.optionals cfg.enableBluetooth [
-                "btmtk"
                 "btusb"
+                "btmtk"
               ];
 
             services.udev.extraRules = lib.mkIf cfg.disableAspm ''
