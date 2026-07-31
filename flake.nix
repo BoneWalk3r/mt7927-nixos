@@ -227,20 +227,26 @@
             pkgs.linuxPackagesFor (
               pkgs.linuxPackages_latest.kernel.override {
                 structuredExtraConfig = with pkgs.lib.kernel; {
+                  # Kill all the dependancies, or else Kmod loads in-tree drivers and breaks everything.
+                  # mt76 base/shared
                   MT76_CORE = lib.mkForce no;
                   MT76_CONNAC_LIB = lib.mkForce no;
+
+                  # mt792x shared
                   MT792X_LIB = lib.mkForce no;
-
-                  MT7921_COMMON = lib.mkForce no;
-                  MT7921E = lib.mkForce no;
-
                   MT7925_COMMON = lib.mkForce no;
-                  MT7925E = lib.mkForce no;
 
-                  MT792x_USB = lib.mkForce no;
+                  # PCI/USB/SDIO MT792 drivers
+                  MT7921E = lib.mkForce no;
                   MT7921S = lib.mkForce no;
                   MT7921U = lib.mkForce no;
+
+                  MT7925E = lib.mkForce no;
                   MT7925U = lib.mkForce no;
+
+                  # other connac users
+                  MT7915E = lib.mkForce no;
+                  MT7996E = lib.mkForce no;
 
                   #BT_HCIBTUSB_MTK = lib.mkForce no;
                   #BT_HCIBTUSB = lib.mkForce no;
