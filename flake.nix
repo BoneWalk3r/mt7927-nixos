@@ -229,17 +229,17 @@
             pkgs.linuxPackagesFor (
               pkgs.linuxPackages_latest.kernel.override {
                 structuredExtraConfig = with pkgs.lib.kernel; {
-                  MT76_CORE = lib.mkForce no;
-                  MT76_CONNAC_LIB = lib.mkForce no;
-                  MT792x_LIB = lib.mkForce no;
+                  #MT76_CORE = lib.mkForce no;
+                  #MT76_CONNAC_LIB = lib.mkForce no;
+                  #MT792x_LIB = lib.mkForce no;
 
-                  MT7921_COMMON = lib.mkForce no;
+                  #MT7921_COMMON = lib.mkForce no;
                   MT7921E = lib.mkForce no;
 
-                  MT7925_COMMON = lib.mkForce no;
+                  #MT7925_COMMON = lib.mkForce no;
                   MT7925E = lib.mkForce no;
 
-                  BT_HCIBTUSB_MTK = lib.mkForce no;
+                  #BT_HCIBTUSB_MTK = lib.mkForce no;
                   BT_HCIBTUSB = lib.mkForce no;
                   BT_MTK = lib.mkForce no;
                 };
