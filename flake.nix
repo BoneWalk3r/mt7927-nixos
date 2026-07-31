@@ -226,31 +226,26 @@
           myKernelPackages =
             pkgs.linuxPackagesFor (
               pkgs.linuxPackages_latest.kernel.override {
-                  extraConfig = ''
-                    # External MT7927 mt76 stack
-                    CONFIG_MT76=n
-                    CONFIG_MT76_CONNAC_LIB=n
-                    CONFIG_MT792X_LIB=n
-                    CONFIG_MT7925_COMMON=n
-                    CONFIG_MT7921E=n
-                    CONFIG_MT7925E=n
-                  '';
-                  /*
                 structuredExtraConfig = with pkgs.lib.kernel; {
                   MT76_CORE = lib.mkForce no;
                   MT76_CONNAC_LIB = lib.mkForce no;
-                  MT792x_LIB = lib.mkForce no;
+                  MT792X_LIB = lib.mkForce no;
 
-                  #MT7921_COMMON = lib.mkForce no;
+                  MT7921_COMMON = lib.mkForce no;
                   MT7921E = lib.mkForce no;
 
                   MT7925_COMMON = lib.mkForce no;
                   MT7925E = lib.mkForce no;
 
+                  MT792x_USB = lib.mkForce no;
+                  MT7921S = lib.mkForce no;
+                  MT7921U = lib.mkForce no;
+                  MT7925U = lib.mkForce no;
+
                   #BT_HCIBTUSB_MTK = lib.mkForce no;
                   #BT_HCIBTUSB = lib.mkForce no;
                   #BT_MTK = lib.mkForce no;
-                };*/
+                };
               }
             );
 
@@ -288,8 +283,11 @@
 
             boot.kernelModules =
               lib.optionals cfg.enableWifi [
+                "mt76"
+                "mt76-connac-lib"
+                "mt792x-lib"
+                "mt7925-common"
                 "mt7925e"
-                #"mt7921e"
               ]
               ++ lib.optionals cfg.enableBluetooth [
                 "btusb"
