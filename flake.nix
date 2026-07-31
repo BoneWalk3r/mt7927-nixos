@@ -241,7 +241,7 @@
 
                   #BT_HCIBTUSB_MTK = lib.mkForce no;
                   BT_HCIBTUSB = lib.mkForce no;
-                  BT_MTK = lib.mkForce no;
+                  #BT_MTK = lib.mkForce no;
                 };
               }
             );
