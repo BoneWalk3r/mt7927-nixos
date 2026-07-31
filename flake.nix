@@ -226,24 +226,22 @@
           cfg = config.hardware.mediatek-mt7927;
 
           myKernelPackages =
-            config.boot.kernelPackages.overrideScope (
-              self: super: {
-                kernel = super.kernel.override {
-                  structuredExtraConfig = with pkgs.lib.kernel; {
-                    MT76_CORE = no;
-                    MT76_CONNAC_LIB = no;
-                    MT792x_LIB = no;
+            pkgs.linuxPackagesFor (
+              pkgs.linux.override {
+                structuredExtraConfig = with pkgs.lib.kernel; {
+                  MT76_CORE = no;
+                  MT76_CONNAC_LIB = no;
+                  MT792x_LIB = no;
 
-                    MT7921_COMMON = no;
-                    MT7921E = no;
+                  MT7921_COMMON = no;
+                  MT7921E = no;
 
-                    MT7925_COMMON = no;
-                    MT7925E = no;
+                  MT7925_COMMON = no;
+                  MT7925E = no;
 
-                    BT_HCIBTUSB_MTK = no;
-                    BT_HCIBTUSB = no;
-                    BT_MTK = no;
-                  };
+                  BT_HCIBTUSB_MTK = no;
+                  BT_HCIBTUSB = no;
+                  BT_MTK = no;
                 };
               }
             );
