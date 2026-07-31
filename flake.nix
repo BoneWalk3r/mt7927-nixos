@@ -143,7 +143,6 @@
             postPatch = ''
               # Install upstream Kbuild files
               cp ${repoSrc}/mt76.Kbuild Kbuild
-              cp ${repoSrc}/mt7921.Kbuild mt7921/Kbuild
               cp ${repoSrc}/mt7925.Kbuild mt7925/Kbuild
               # Install compat header for kernels lacking airoha_offload.h
               mkdir -p compat/include/linux/soc/airoha
@@ -163,9 +162,8 @@
               runHook preInstall
 
               modDir="$out/lib/modules/${kernel.modDirVersion}/extra/mt76"
-              install -dm755 "$modDir/mt7921" "$modDir/mt7925"
+              install -dm755 "$modDir/mt7925"
               install -m644 mt76.ko mt76-connac-lib.ko mt792x-lib.ko "$modDir/"
-              install -m644 mt7921/*.ko "$modDir/mt7921/"
               install -m644 mt7925/*.ko "$modDir/mt7925/"
 
               runHook postInstall
@@ -281,7 +279,7 @@
             boot.kernelModules =
               lib.optionals cfg.enableWifi [
                 "mt7925e"
-                "mt7921e"
+                #"mt7921e"
               ]
               ++ lib.optionals cfg.enableBluetooth [
                 "btusb"
