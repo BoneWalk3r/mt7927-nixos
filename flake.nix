@@ -227,7 +227,7 @@
 
           myKernelPackages =
             pkgs.linuxPackagesFor (
-              pkgs.linux.override {
+              pkgs.linuxPackages_latest.kernel.override {
                 structuredExtraConfig = with pkgs.lib.kernel; {
                   MT76_CORE = no;
                   MT76_CONNAC_LIB = no;
