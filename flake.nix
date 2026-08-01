@@ -311,10 +311,8 @@
                 "btmtk"
               ];
 
-            services.udev.extraRules = lib.mkIf cfg.disableAspm ''
-              ACTION=="add", SUBSYSTEM=="pci", \
-                ATTR{vendor}=="0x14c3", ATTR{device}=="0x7927", \
-                ATTR{link/l1_aspm}="0"
+            boot.extraModprobeConfig = lib.mkIf cfg.disableAspm ''
+              options mt7925e disable_aspm=1
             '';
           };
         };
