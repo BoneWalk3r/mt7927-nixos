@@ -51,6 +51,7 @@
             "mt7927-wifi-01-clean-up-dma-on-probe-failure.patch"
             "mt7927-wifi-02-fix-stale-pointer-comparisons-in-changev.patch"
             "mt7927-wifi-05-populate-eht-320mhz-mcs-map-in-starec.patch"
+            "mt7927-wifi-06-advertise-eht-320mhz-capabilities-for-6g.patch"
             "mt7927-wifi-23-keep-tx-ba-state-in-the-primary-wcid.patch"
             # add others as discovered
           ];
