@@ -55,6 +55,7 @@
             "mt7927-wifi-08-add-mt7927-firmware-paths.patch"
             "mt7927-wifi-09-use-irqmap-for-chip-specific-interrupt-h.patch"
             "mt7927-wifi-10-disable-aspm-and-runtime-pm-for-mt7927.patch"
+            "mt7927-wifi-11-replace-ismt7925-with-isconnac3.patch"
             "mt7927-wifi-23-keep-tx-ba-state-in-the-primary-wcid.patch"
             # add others as discovered
           ];
