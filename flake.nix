@@ -62,6 +62,7 @@
             "mt7927-wifi-16-switch-dma-init-to-common-mt792x-queue-h.patch"
             "mt7927-wifi-17-add-mt7927-specific-pcie-dma-support.patch"
             "mt7927-wifi-18-sync-mt7927-bss-band-assignment.patch"
+            "mt7927-wifi-19-add-mbmc-event-handling.patch"
             "mt7927-wifi-23-keep-tx-ba-state-in-the-primary-wcid.patch"
             # add others as discovered
           ];
