@@ -68,6 +68,7 @@
             "mt7927-wifi-23-keep-tx-ba-state-in-the-primary-wcid.patch"
             "mt7927-wifi-24-pass-wcid-explicitly-to-mt7925mcustaba.patch"
             "mt7927-wifi-25-program-ba-state-on-active-links.patch"
+            "mt7927-wifi-26-use-a-helper-to-cache-txpowercur.patch"
             # add others as discovered
           ];
 
