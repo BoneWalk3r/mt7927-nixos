@@ -59,6 +59,7 @@
             "mt7927-wifi-12-use-link-specific-removal-for-non-mld-st.patch"
             "mt7927-wifi-13-tolerate-inactive-bss-deactivation.patch"
             "mt7927-wifi-14-add-mt7927-wfsys-reset-support.patch"
+            "mt7927-wifi-16-switch-dma-init-to-common-mt792x-queue-h.patch"
             "mt7927-wifi-23-keep-tx-ba-state-in-the-primary-wcid.patch"
             # add others as discovered
           ];
