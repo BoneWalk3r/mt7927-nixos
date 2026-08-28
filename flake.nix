@@ -67,6 +67,7 @@
             "mt7927-wifi-22-add-mt7927-usb-support.patch"
             "mt7927-wifi-23-keep-tx-ba-state-in-the-primary-wcid.patch"
             "mt7927-wifi-24-pass-wcid-explicitly-to-mt7925mcustaba.patch"
+            "mt7927-wifi-25-program-ba-state-on-active-links.patch"
             # add others as discovered
           ];
 
