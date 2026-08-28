@@ -69,6 +69,7 @@
             "mt7927-wifi-24-pass-wcid-explicitly-to-mt7925mcustaba.patch"
             "mt7927-wifi-25-program-ba-state-on-active-links.patch"
             "mt7927-wifi-26-use-a-helper-to-cache-txpowercur.patch"
+            "mt7927-wifi-27-factor-out-rate-power-limit-calculation.patch"
             # add others as discovered
           ];
 
