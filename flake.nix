@@ -64,6 +64,7 @@
             "mt7927-wifi-18-sync-mt7927-bss-band-assignment.patch"
             "mt7927-wifi-19-add-mbmc-event-handling.patch"
             "mt7927-wifi-21-add-mt7927-pcie-support.patch"
+            "mt7927-wifi-22-add-mt7927-usb-support.patch"
             "mt7927-wifi-23-keep-tx-ba-state-in-the-primary-wcid.patch"
             # add others as discovered
           ];
