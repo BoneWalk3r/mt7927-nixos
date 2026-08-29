@@ -163,7 +163,7 @@
               pkgs.kmod
             ];
 
-            patches = wifiPatches;
+            patches = [ "" ];
 
             prePatch = "cd drivers/net/wireless/mediatek/mt76";
 
