@@ -310,7 +310,7 @@
             };
             enableBluetooth = lib.mkOption {
               type = lib.types.bool;
-              default = true;
+              default = false;
             };
             disableAspm = lib.mkOption {
               type = lib.types.bool;
