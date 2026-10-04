@@ -81,6 +81,7 @@
 
 
       btPatches = let blacklist = [
+            "mt6639-bt-compat-for-pre-7.0-kernels"
             # add others as discovered
           ];
 
